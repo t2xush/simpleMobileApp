@@ -1,4 +1,4 @@
-Math-related App
+Math-related App.
 This is a simple math related app,contains two parts:
 
 1.Dice Roller Game,
