@@ -4,17 +4,21 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -27,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -41,8 +46,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
@@ -50,12 +58,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.simpleapp.ui.theme.SimpleappTheme
-import com.example.simpleapp.viewmodel.ExcuseViewModel
-import com.example.simpleapp.Excuse
+import com.example.simpleapp.CalViewModel
+
 
 
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -85,8 +94,8 @@ fun ScaffoldAApp(){
         composable(route="Info"){
             InfoScreen(navController )
         }
-        composable(route="Settings"){
-            SettingScreen(navController )
+        composable(route="Calculator"){
+            CalculatorScreen(navController, viewModel = CalViewModel() )
         }
    }
 }
@@ -113,8 +122,8 @@ fun MainTopBar(title:String,navController:NavController){
                 onDismissRequest = { expanded=false }) {
                 DropdownMenuItem({ Text("Info") },
                     onClick = { navController.navigate("Info")/*TODO*/ })
-                DropdownMenuItem({ Text("Settings") },
-                    onClick = {navController.navigate("Settings") /*TODO*/ })
+                DropdownMenuItem({ Text("Calculator") },
+                    onClick = {navController.navigate("Calculator") /*TODO*/ })
             }
         }
 
@@ -146,7 +155,9 @@ fun MainScreen(navController:NavController){
         topBar={MainTopBar("My APP",navController)},
         content = {
             Text(text = "Dice roller game",
-                modifier = Modifier.padding(it).size(200.dp))
+                modifier = Modifier
+                    .padding(it),
+                fontSize = 25.sp)
             DiceRollerApp()
 
 
@@ -165,8 +176,14 @@ fun InfoScreen(navController:NavController){
         topBar={ScreenTopBar("My APP",navController)},
         content = {
 
-            Text(text = "content for info screen",
-                modifier = Modifier.padding(it))
+            Text(text = "This is an app containing two part: " +
+                    "dice roller game and a simple calculator",
+                modifier = Modifier
+                    .padding(it),
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp
+
+            )
         }
     )
 
@@ -175,12 +192,15 @@ fun InfoScreen(navController:NavController){
 
 
 @Composable
-fun SettingScreen(navController:NavController){
+fun CalculatorScreen(navController:NavController,viewModel: CalViewModel){
+
     Scaffold(
-        topBar={ScreenTopBar("Settings",navController)},
+        topBar={ScreenTopBar("Calculator",navController)},
         content = {
-            Text(text = "content for setting screen",
+            Text(text = "simple calculator",
                 modifier = Modifier.padding(it))
+
+            SimpleCalculation(viewModel = viewModel)
         }
     )
 }
@@ -224,30 +244,53 @@ fun DiceWithButtonAndImage(
 }
 
 
-@Composable
-fun ExcuseScreen(excuseViewModel: ExcuseViewModel= viewModel()){
-    ExcuseList(excuseViewModel.excuses)
-}
 
 
 @Composable
-fun ExcuseList(excuses:List<Excuse>) {
-    LazyColumn(
-        modifier = Modifier.padding(8.dp)
+fun SimpleCalculation(viewModel: CalViewModel) {
+    Column(
+        modifier = Modifier.padding(88.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
-        items(excuses) { excuse ->
-            Text(
-                text = excuse.excuse,
-                modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
-            )
-            Divider(color = Color.LightGray, thickness = 1.dp)
+        OutlinedTextField(
+            value = viewModel.firstInput,
+            onValueChange = { viewModel.updateFirstNumber(it) },
+            label = { Text("Enter first number") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        OutlinedTextField(
+            value = viewModel.secondInput,
+            onValueChange = { viewModel.updateSecondNumber(it) },
+            label = { Text("Enter second number") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Text(
+            text = stringResource(R.string.addition, String.format("%.2f", viewModel.addfun.value)),
 
-        }
+        )
+        Text(
+            text = stringResource(
+                R.string.subtraction,
+                String.format("%.2f", viewModel.subfun.value)
+            ),
+
+        )
+        Text(
+            text = stringResource(
+                R.string.multiplication,
+                String.format("%.2f", viewModel.mulfun.value)
+            ),
+
+        )
+        Text(
+            text = stringResource(R.string.division, String.format("%.2f", viewModel.divfun.value)),
+
+        )
     }
 }
-
-
-
 
 
 @Preview(showBackground = true)

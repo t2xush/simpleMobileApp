@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">simpleapp</string>
     <string name="roll">Roll</string>
+    <string name="addition">Addition: %1$s</string>
+    <string name="subtraction">Subtraction: %1$s</string>
+    <string name="multiplication">Multiplication: %1$s</string>
+    <string name="division">Division: %1$s</string>
 </resources>
