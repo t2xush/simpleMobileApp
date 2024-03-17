@@ -6,7 +6,7 @@ click the "Roll" button .
 it will generate random outcomes, and the corresponding number's image will be displayed.
 
 2.Simple Calculator.
-Perform basic arithmetic operations :addition, subtraction, multiplication, and division 
+Perform basic arithmetic operations :addition, subtraction, multiplication, and division .  
 enter two numbers,the results will be calculated and displayed automatically.
 
 
