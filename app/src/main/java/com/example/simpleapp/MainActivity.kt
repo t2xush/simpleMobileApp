@@ -173,10 +173,10 @@ fun MainScreen(navController:NavController){
 @Composable
 fun InfoScreen(navController:NavController){
     Scaffold (
-        topBar={ScreenTopBar("My APP",navController)},
+        topBar={ScreenTopBar("Info",navController)},
         content = {
 
-            Text(text = "This is an app containing two part: " +
+            Text(text = "This is an app containing two main parts: " +
                     "dice roller game and a simple calculator",
                 modifier = Modifier
                     .padding(it),
@@ -211,6 +211,8 @@ fun CalculatorScreen(navController:NavController,viewModel: CalViewModel){
 fun DiceRollerApp(){
     DiceWithButtonAndImage()
 }
+
+
 
 @Composable
 fun DiceWithButtonAndImage(
