@@ -47,11 +47,11 @@ class CalViewModel : ViewModel() {
             mul.value = firstNumber * secondNumber
             div.value = firstNumber / secondNumber
         } else {
-            // Handle invalid input or division by zero
+
             add.value = 0.0f
             sub.value = 0.0f
             mul.value = 0.0f
-            div.value = Float.NaN // Set division result as NaN (Not a Number)
+            div.value = Float.NaN
         }
     }
 }
